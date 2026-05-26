@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search, Plus } from 'lucide-react';
-import { useGroups, useGroupTasks } from '../api/groups';
+import { useGroups } from '../api/groups';
+import { useTasks } from '../api/tasks';
 import { GroupCard } from '../components/GroupCard';
 import { NewGroupSheet } from '../components/NewGroupSheet';
 import { TaskCard } from '../components/TaskCard';
@@ -9,17 +10,18 @@ import { useUIStore } from '../store/ui';
 import type { Task } from '@makeit/shared';
 
 function GroupActivityFeed({ groups }: { groups: { id: string; name: string; color?: string }[] }) {
-  // We fetch tasks for all groups and merge
-  const groupQueries = groups.map((g) => ({
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    data: useGroupTasks(g.id).data ?? [],
-    group: g,
-  }));
+  // Fetch ALL tasks once and filter client-side to those with a groupId
+  const { data: allTasks = [] } = useTasks({});
+
+  const groupMap = new Map(groups.map((g) => [g.id, g]));
 
   const items: Array<{ task: Task; groupName: string; groupColor: string }> = [];
-  for (const { data, group } of groupQueries) {
-    for (const task of data) {
-      items.push({ task, groupName: group.name, groupColor: group.color ?? '#A78BFA' });
+  for (const task of allTasks) {
+    if (task.groupId) {
+      const group = groupMap.get(task.groupId);
+      if (group) {
+        items.push({ task, groupName: group.name, groupColor: group.color ?? '#A78BFA' });
+      }
     }
   }
 

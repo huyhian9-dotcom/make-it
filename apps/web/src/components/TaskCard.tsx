@@ -33,9 +33,9 @@ export function TaskCard({ task }: TaskCardProps) {
     >
       <div className="p-4">
         {/* Top row: label chip (top right) + deadline badge */}
-        {(hasLabel || hasDueDate) && (
+        {(hasLabel || (hasDueDate && !isDone)) && (
           <div className="flex justify-end mb-1 gap-2">
-            {hasDueDate && (
+            {hasDueDate && !isDone && (
               <span
                 className={`text-xs font-medium px-2 py-0.5 rounded-full ${getDeadlineColor(task.dueDate!)}`}
               >

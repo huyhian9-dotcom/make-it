@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../store/auth';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5001/api/v1';
 
@@ -11,18 +12,9 @@ export const apiClient = axios.create({
 
 // Request interceptor: inject auth token
 apiClient.interceptors.request.use((config) => {
-  // Import lazily to avoid circular deps
-  const raw = localStorage.getItem('auth-store');
-  if (raw) {
-    try {
-      const parsed = JSON.parse(raw) as { state?: { token?: string } };
-      const token = parsed?.state?.token;
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch {
-      // ignore parse errors
-    }
+  const token = useAuthStore.getState().token;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });

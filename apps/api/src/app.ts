@@ -6,7 +6,7 @@ import { errorMiddleware } from './middlewares/error.js';
 export function createApp() {
   const app = express();
 
-  app.use(cors());
+  app.use(cors({ origin: process.env.ALLOWED_ORIGIN ?? 'http://localhost:5173' }));
   app.use(express.json());
 
   app.use('/api/v1', router);

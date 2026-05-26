@@ -110,17 +110,15 @@ export const tasksRepo = {
           qb.where('due_date', '<=', filters.to!);
         }
 
-        // OR starts_on..ends_on overlaps range
-        if (filters.from || filters.to) {
-          qb.orWhere((qb2) => {
-            if (filters.from) qb2.where((q) => {
-              q.where('starts_on', '<=', filters.to ?? filters.from!).orWhereNull('starts_on');
-            });
-            if (filters.to) qb2.where((q) => {
-              q.where('ends_on', '>=', filters.from ?? filters.to!).orWhereNull('ends_on');
-            });
-          });
-        }
+        // OR starts_on..ends_on overlaps range (both must be non-null)
+        qb.orWhere((qb2) => {
+          if (filters.from) qb2.where('starts_on', '<=', filters.to ?? filters.from!);
+          if (filters.to) qb2.where('ends_on', '>=', filters.from ?? filters.to!);
+          qb2.whereNotNull('starts_on').whereNotNull('ends_on');
+        });
+
+        // OR recurring habits always appear in date-range queries
+        qb.orWhere('kind', 'habit');
       });
     }
 

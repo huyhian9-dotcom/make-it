@@ -9,7 +9,7 @@ export const userRoutes = Router();
 const updateUserSchema = z.object({
   name: z.string().min(1).optional(),
   bio: z.string().nullable().optional(),
-  avatarUrl: z.string().nullable().optional(),
+  avatarUrl: z.string().url().nullable().optional(),
 });
 
 const updatePreferencesSchema = z.object({

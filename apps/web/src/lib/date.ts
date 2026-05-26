@@ -29,7 +29,7 @@ export function todayISO(): string {
 
 export function getDeadlineColor(dueDate: string): string {
   const due = parseISO(dueDate);
-  const today = new Date();
+  const today = parseISO(format(new Date(), 'yyyy-MM-dd'));
   const diff = differenceInDays(due, today);
 
   if (diff < 0) return 'bg-red-500 text-white';
