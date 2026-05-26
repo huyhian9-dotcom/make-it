@@ -74,6 +74,21 @@ describe('Tasks', () => {
     expect(titles).toContain('Deadline task');
   });
 
+  it('GET /tasks?label_id= filters by label', async () => {
+    const labelRes = await request(app).post('/api/v1/labels').set('Authorization', `Bearer ${token}`)
+      .send({ name: 'QA label', color: '#3366ff' });
+    const labelId = labelRes.body.data.id;
+    await request(app).post('/api/v1/tasks').set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Labeled task', labelId });
+    await request(app).post('/api/v1/tasks').set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Unlabeled task' });
+
+    const res = await request(app).get(`/api/v1/tasks?label_id=${labelId}`).set('Authorization', `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    expect(res.body.data.length).toBeGreaterThanOrEqual(1);
+    expect(res.body.data.every((t: { labelId: string | null }) => t.labelId === labelId)).toBe(true);
+  });
+
   it('PATCH /tasks/:id/complete with done=true → status=done', async () => {
     const res = await request(app).patch(`/api/v1/tasks/${taskId}/complete`)
       .set('Authorization', `Bearer ${token}`).send({ done: true });

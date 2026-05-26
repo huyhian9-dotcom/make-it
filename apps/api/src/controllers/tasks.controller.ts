@@ -5,8 +5,9 @@ import { ok, created } from '../utils/response.js';
 export const tasksController = {
   async list(req: Request, res: Response, next: NextFunction) {
     try {
-      const { from, to, kind, status, labelId } = req.query as Record<string, string | undefined>;
+      const { from, to, kind, status } = req.query as Record<string, string | undefined>;
       const groupId = (req.query.groupId ?? req.query.group_id) as string | undefined;
+      const labelId = (req.query.labelId ?? req.query.label_id) as string | undefined;
       const tasks = await tasksService.list(req.user!.id, { from, to, kind: kind as never, groupId, status: status as never, labelId });
       ok(res, tasks);
     } catch (err) { next(err); }

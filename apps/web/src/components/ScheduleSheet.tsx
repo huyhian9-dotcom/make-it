@@ -3,7 +3,7 @@ import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInte
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Sheet } from './Sheet';
 import { useCreateTask } from '../api/tasks';
-import type { CreateTaskDTO } from '@makeit/shared';
+import type { CreateTaskDTO, GroupTaskType } from '@makeit/shared';
 
 interface ScheduleSheetProps {
   open: boolean;
@@ -11,6 +11,7 @@ interface ScheduleSheetProps {
   taskTitle: string;
   taskNotes?: string;
   groupId?: string | null;
+  groupTaskType?: GroupTaskType | null;
   multiDays?: boolean;
 }
 
@@ -23,6 +24,7 @@ export function ScheduleSheet({
   taskTitle,
   taskNotes,
   groupId,
+  groupTaskType,
   multiDays,
 }: ScheduleSheetProps) {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
@@ -52,6 +54,7 @@ export function ScheduleSheet({
       title: taskTitle,
       notes: taskNotes ?? null,
       groupId: groupId ?? null,
+      groupTaskType: groupId ? groupTaskType ?? 'livre' : null,
     };
 
     if (mode === 'habito') {

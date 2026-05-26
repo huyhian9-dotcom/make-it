@@ -9,7 +9,7 @@ export async function getTasks(filters: TaskFilters = {}): Promise<Task[]> {
   if (filters.kind) params.set('kind', filters.kind);
   if (filters.groupId) params.set('group_id', filters.groupId);
   if (filters.status) params.set('status', filters.status);
-  if (filters.labelId) params.set('label_id', filters.labelId);
+  if (filters.labelId) params.set('labelId', filters.labelId);
 
   const res = await apiClient.get<{ success: true; data: Task[] }>(`/tasks?${params.toString()}`);
   return unwrap(res);
@@ -64,7 +64,12 @@ export function useCreateTask() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: createTask,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['tasks'] }),
+    onSuccess: (task) => {
+      qc.invalidateQueries({ queryKey: ['tasks'] });
+      if (task.groupId) {
+        qc.invalidateQueries({ queryKey: ['group-tasks', task.groupId] });
+      }
+    },
   });
 }
 
