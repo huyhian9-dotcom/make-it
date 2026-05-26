@@ -97,7 +97,9 @@ export function createTestApp(db: Knex) {
 
   router.get('/tasks', requireAuth, async (req, res, next) => {
     try {
-      const { from, to, kind, groupId, status, labelId } = req.query as Record<string, string | undefined>;
+      const { from, to, kind, status } = req.query as Record<string, string | undefined>;
+      const groupId = (req.query.groupId ?? req.query.group_id) as string | undefined;
+      const labelId = (req.query.labelId ?? req.query.label_id) as string | undefined;
       ok(res, await tasksService.list(req.user!.id, { from, to, kind: kind as never, groupId, status: status as never, labelId }, db));
     } catch (e) { next(e); }
   });
