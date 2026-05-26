@@ -1,0 +1,24 @@
+{
+  "name": "make-it",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Make It! — app de tarefas + rotina. Monorepo: API (Express) + Web (React).",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm -w apps/api run dev\" \"npm -w apps/web run dev\"",
+    "build": "npm -w apps/api run build && npm -w apps/web run build",
+    "migrate": "npm -w apps/api run migrate",
+    "seed": "npm -w apps/api run seed",
+    "test": "npm -w apps/api run test && npm -w apps/web run test",
+    "lint": "npm -w apps/api run lint --if-present && npm -w apps/web run lint --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,17 @@
+# Opcional — só se quiser rodar com Postgres em vez de SQLite.
+# Uso: docker compose up -d db  +  DB_CLIENT=pg no .env
+services:
+  db:
+    image: postgres:16
+    container_name: makeit-db
+    environment:
+      POSTGRES_USER: makeit
+      POSTGRES_PASSWORD: makeit
+      POSTGRES_DB: makeit
+    ports:
+      - "5432:5432"
+    volumes:
+      - makeit_pg:/var/lib/postgresql/data
+
+volumes:
+  makeit_pg:

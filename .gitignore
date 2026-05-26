@@ -7,3 +7,8 @@ build/
 coverage/
 .DS_Store
 .vite/
+# build paralelo: lock unificado é commitado só na integração final
+package-lock.json
+# SQLite local
+*.sqlite
+*.sqlite-journal
