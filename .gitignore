@@ -12,3 +12,6 @@ package-lock.json
 # SQLite local
 *.sqlite
 *.sqlite-journal
+# tsc não deve versionar JS compilado no source do shared
+packages/shared/src/*.js
+packages/shared/src/*.js.map
